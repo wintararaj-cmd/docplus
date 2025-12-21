@@ -117,7 +117,7 @@ export default async function DoctorDashboard() {
             {/* Header */}
             <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-8 text-white shadow-lg">
                 <h1 className="text-3xl font-bold mb-2">
-                    Welcome back, Dr. {doctor.user.name}!
+                    Welcome back, Dr. {doctor.firstName} {doctor.lastName}!
                 </h1>
                 <p className="text-emerald-100">
                     {doctor.specialization} • {doctor.experience} years of experience
@@ -216,7 +216,7 @@ export default async function DoctorDashboard() {
                                         </div>
                                         <div>
                                             <p className="font-semibold text-gray-900">
-                                                {appointment.patient.user.name}
+                                                {appointment.patient.firstName} {appointment.patient.lastName}
                                             </p>
                                             <p className="text-sm text-gray-600">
                                                 {new Date(appointment.appointmentDate).toLocaleDateString(
@@ -281,7 +281,7 @@ export default async function DoctorDashboard() {
                                                 {appointment.startTime}
                                             </p>
                                             <p className="text-sm text-gray-600">
-                                                {appointment.patient.user.name}
+                                                {appointment.patient.firstName} {appointment.patient.lastName}
                                             </p>
                                         </div>
                                     </div>

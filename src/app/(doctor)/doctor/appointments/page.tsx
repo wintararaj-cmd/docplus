@@ -82,10 +82,10 @@ export default async function DoctorAppointments() {
                                         <Mail className="h-4 w-4" />
                                         <span>{appointment.patient.user.email}</span>
                                     </div>
-                                    {appointment.patient.phone && (
+                                    {appointment.patient.user.phone && (
                                         <div className="flex items-center space-x-1">
                                             <Phone className="h-4 w-4" />
-                                            <span>{appointment.patient.phone}</span>
+                                            <span>{appointment.patient.user.phone}</span>
                                         </div>
                                     )}
                                 </div>
