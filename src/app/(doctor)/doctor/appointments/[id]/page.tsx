@@ -195,10 +195,10 @@ export default async function AppointmentDetails({ params }: { params: { id: str
                                     <Mail className="h-4 w-4" />
                                     <span className="text-sm">{appointment.patient.user.email}</span>
                                 </div>
-                                {appointment.patient.phone && (
+                                {appointment.patient.user.phone && (
                                     <div className="flex items-center gap-3 text-gray-600">
                                         <Phone className="h-4 w-4" />
-                                        <span className="text-sm">{appointment.patient.phone}</span>
+                                        <span className="text-sm">{appointment.patient.user.phone}</span>
                                     </div>
                                 )}
                                 {appointment.patient.bloodGroup && (
