@@ -97,10 +97,10 @@ export default async function PatientProfile({
                                 <Mail className="h-4 w-4" />
                                 <span>{patient.user.email}</span>
                             </div>
-                            {patient.phone && (
+                            {patient.user.phone && (
                                 <div className="flex items-center space-x-1">
                                     <Phone className="h-4 w-4" />
-                                    <span>{patient.phone}</span>
+                                    <span>{patient.user.phone}</span>
                                 </div>
                             )}
                         </div>
