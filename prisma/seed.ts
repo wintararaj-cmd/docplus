@@ -7,22 +7,28 @@ async function main() {
     console.log('🌱 Starting seed...');
 
     // Clean up existing data
-    console.log('Cleaning up database...');
-    try {
-        await prisma.appointment.deleteMany();
-        await prisma.doctorAvailability.deleteMany();
-        await prisma.review.deleteMany();
-        await prisma.message.deleteMany();
-        await prisma.notification.deleteMany();
-        await prisma.auditLog.deleteMany();
-        await prisma.prescription.deleteMany();
-        await prisma.labReport.deleteMany();
-        await prisma.medicalRecord.deleteMany();
-        await prisma.doctor.deleteMany();
-        await prisma.patient.deleteMany();
-        await prisma.user.deleteMany();
-    } catch (error) {
-        console.log('Database was empty or cleanup failed (non-fatal)');
+    // Clean up existing data
+    // Only run cleanup if explicitly requested
+    if (process.env.RESET_DB === 'true') {
+        console.log('Cleaning up database...');
+        try {
+            await prisma.appointment.deleteMany();
+            await prisma.doctorAvailability.deleteMany();
+            await prisma.review.deleteMany();
+            await prisma.message.deleteMany();
+            await prisma.notification.deleteMany();
+            await prisma.auditLog.deleteMany();
+            await prisma.prescription.deleteMany();
+            await prisma.labReport.deleteMany();
+            await prisma.medicalRecord.deleteMany();
+            await prisma.doctor.deleteMany();
+            await prisma.patient.deleteMany();
+            await prisma.user.deleteMany();
+        } catch (error) {
+            console.log('Database was empty or cleanup failed (non-fatal)');
+        }
+    } else {
+        console.log('Skipping database cleanup (RESET_DB not set to true)');
     }
 
     // Create test patient
