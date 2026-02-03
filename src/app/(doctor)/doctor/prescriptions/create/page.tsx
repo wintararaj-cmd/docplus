@@ -14,9 +14,17 @@ import {
     Save,
     User,
     Calendar,
-    Pill
+    Pill,
+    Search
 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 type Medication = {
     name: string;
@@ -34,6 +42,8 @@ export default function CreatePrescription() {
 
     const [loading, setLoading] = useState(false);
     const [patient, setPatient] = useState<any>(null);
+    const [availablePatients, setAvailablePatients] = useState<any[]>([]);
+    const [loadingPatients, setLoadingPatients] = useState(false);
     const [diagnosis, setDiagnosis] = useState("");
     const [notes, setNotes] = useState("");
     const [medications, setMedications] = useState<Medication[]>([
@@ -51,8 +61,26 @@ export default function CreatePrescription() {
             fetchPatient(patientId);
         } else if (appointmentId) {
             fetchAppointment(appointmentId);
+        } else {
+            fetchMyPatients();
         }
     }, [patientId, appointmentId]);
+
+    const fetchMyPatients = async () => {
+        setLoadingPatients(true);
+        try {
+            const response = await fetch("/api/doctor/patients");
+            if (response.ok) {
+                const data = await response.json();
+                setAvailablePatients(data);
+            }
+        } catch (error) {
+            console.error("Error fetching patients:", error);
+            toast.error("Failed to load patients list");
+        } finally {
+            setLoadingPatients(false);
+        }
+    };
 
     const fetchPatient = async (id: string) => {
         try {
@@ -159,9 +187,59 @@ export default function CreatePrescription() {
     };
 
     if (!patient) {
+        if (loading || loadingPatients) {
+            return (
+                <div className="flex items-center justify-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+                </div>
+            );
+        }
+
         return (
-            <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+            <div className="max-w-xl mx-auto py-12">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Select Patient</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-gray-600">
+                            Please select a patient to create a prescription for.
+                        </p>
+                        <Select
+                            onValueChange={(value) => {
+                                const selected = availablePatients.find((p) => p.id === value);
+                                if (selected) {
+                                    // Construct patient object compatible with the form
+                                    setPatient({
+                                        ...selected,
+                                        user: { email: selected.email }
+                                    });
+                                }
+                            }}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a patient..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {availablePatients.length === 0 ? (
+                                    <div className="p-2 text-sm text-gray-500 text-center">No patients found</div>
+                                ) : (
+                                    availablePatients.map((p) => (
+                                        <SelectItem key={p.id} value={p.id}>
+                                            {p.firstName} {p.lastName} ({p.email})
+                                        </SelectItem>
+                                    ))
+                                )}
+                            </SelectContent>
+                        </Select>
+
+                        <div className="flex justify-end pt-4">
+                            <Button variant="outline" onClick={() => router.back()}>
+                                Cancel
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         );
     }
