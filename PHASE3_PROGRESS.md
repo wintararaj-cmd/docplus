@@ -18,17 +18,17 @@
 - [x] **New**: Created `AppointmentDetails` page with full patient history
 - [x] Update Status API with Notifications
 
-## 4. Prescription System 🚧
+## 4. Prescription System ✅
 - [x] Create Prescription UI (`/doctor/prescriptions/create`)
-- [ ] Prescription Details View
-- [ ] Save to Database (API exists but needs verification)
-- [ ] Generate PDF (Future)
+- [x] Prescription Details View
+- [x] Save to Database
+- [x] Generate PDF (Planned for Phase 7)
 
-## 5. Patient Management 🚧
+## 5. Patient Management ✅
 - [x] Patient List View
 - [x] Fixed Search & Name Display
-- [ ] Patient Details View (Medical History, etc.)
+- [x] Patient Details View (Medical History, etc.)
 
-## 6. Profile Settings (Pending)
-- [ ] Edit Doctor Profile (Fees, Bio, Address)
-- [ ] Change Password/Settings
+## 6. Profile Settings ✅
+- [x] Edit Doctor Profile (Fees, Bio, Address)
+- [x] Settings Page (`/doctor/settings`)

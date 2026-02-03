@@ -1,69 +1,64 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/db";
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
-
-        if (!session || session.user.role !== "ADMIN") {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+        if (!session?.user || session.user.role !== 'ADMIN') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const body = await request.json();
-        const { doctorId, userId, action } = body;
+        const { doctorId, action } = await request.json();
 
-        if (!doctorId || !userId || !action) {
-            return NextResponse.json(
-                { message: "Doctor ID, User ID, and action are required" },
-                { status: 400 }
-            );
+        if (!doctorId || !action) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        if (action === "approve") {
-            // Verify and activate the doctor
-            await prisma.$transaction([
-                // Update doctor record
-                prisma.doctor.update({
-                    where: { id: doctorId },
-                    data: {
-                        licenseVerified: true,
-                        isAvailable: true,
-                    },
-                }),
-                // Activate user account
-                prisma.user.update({
-                    where: { id: userId },
-                    data: {
-                        isActive: true,
-                        emailVerified: true,
-                    },
-                }),
-            ]);
-
-            return NextResponse.json({
-                message: "Doctor verified and activated successfully",
-            });
-        } else if (action === "reject") {
-            // Delete the doctor and user account
-            await prisma.user.delete({
-                where: { id: userId },
+        if (action === 'approve') {
+            // Approve doctor
+            const updateDoctor = await prisma.doctor.update({
+                where: { id: doctorId },
+                data: {
+                    licenseVerified: true,
+                    isAvailable: true,
+                },
             });
 
-            return NextResponse.json({
-                message: "Doctor application rejected and account deleted",
+            // Also mark the user as active/verified if needed
+            await prisma.user.update({
+                where: { id: updateDoctor.userId },
+                data: {
+                    isActive: true,
+                    emailVerified: new Date(), // Auto-verify email upon admin approval
+                },
             });
+
+            // Send email notification here (ToDo)
+
+            return NextResponse.json({ success: true, message: 'Doctor approved successfully' });
+        } else if (action === 'reject') {
+            // For now, let's just don't verify. Or we could deactivate the user.
+            // Ideally we would send a rejection email with reason.
+
+            const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+            if (doctor) {
+                await prisma.user.update({
+                    where: { id: doctor.userId },
+                    data: { isActive: false },
+                });
+            }
+
+            return NextResponse.json({ success: true, message: 'Doctor rejected and account deactivated' });
         } else {
-            return NextResponse.json(
-                { message: "Invalid action. Must be 'approve' or 'reject'" },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
         }
+
     } catch (error) {
-        console.error("Error verifying doctor:", error);
+        console.error('Error verifying doctor:', error);
         return NextResponse.json(
-            { message: "Internal server error" },
+            { error: 'Failed to process verification' },
             { status: 500 }
         );
     }

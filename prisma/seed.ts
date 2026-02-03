@@ -6,6 +6,25 @@ const prisma = new PrismaClient();
 async function main() {
     console.log('🌱 Starting seed...');
 
+    // Clean up existing data
+    console.log('Cleaning up database...');
+    try {
+        await prisma.appointment.deleteMany();
+        await prisma.doctorAvailability.deleteMany();
+        await prisma.review.deleteMany();
+        await prisma.message.deleteMany();
+        await prisma.notification.deleteMany();
+        await prisma.auditLog.deleteMany();
+        await prisma.prescription.deleteMany();
+        await prisma.labReport.deleteMany();
+        await prisma.medicalRecord.deleteMany();
+        await prisma.doctor.deleteMany();
+        await prisma.patient.deleteMany();
+        await prisma.user.deleteMany();
+    } catch (error) {
+        console.log('Database was empty or cleanup failed (non-fatal)');
+    }
+
     // Create test patient
     console.log('Creating test patient...');
     const patientPassword = await bcrypt.hash('password123', 10);
@@ -71,6 +90,14 @@ async function main() {
                     isAvailable: true,
                     rating: 4.8,
                     totalReviews: 45,
+                    availability: {
+                        create: [1, 2, 3, 4, 5].map(day => ({
+                            dayOfWeek: day,
+                            startTime: '09:00',
+                            endTime: '17:00',
+                            slotDuration: 30
+                        }))
+                    }
                 },
             },
         },
@@ -166,6 +193,14 @@ async function main() {
                         isAvailable: true,
                         rating: 4.0 + Math.random() * 0.9,
                         totalReviews: Math.floor(Math.random() * 50) + 10,
+                        availability: {
+                            create: [1, 2, 3, 4, 5].map(day => ({
+                                dayOfWeek: day,
+                                startTime: '09:00',
+                                endTime: '17:00',
+                                slotDuration: 30
+                            }))
+                        }
                     },
                 },
             },

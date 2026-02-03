@@ -10,7 +10,8 @@ import {
     Clock,
     MessageSquare,
     LogOut,
-    Stethoscope
+    Stethoscope,
+    Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -45,6 +46,11 @@ const navItems = [
         href: "/doctor/chat",
         icon: MessageSquare,
     },
+    {
+        name: "Settings",
+        href: "/doctor/settings",
+        icon: Settings,
+    },
 ];
 
 export default function DoctorNav() {
@@ -75,8 +81,8 @@ export default function DoctorNav() {
                                     key={item.href}
                                     href={item.href}
                                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${isActive
-                                            ? "bg-white/20 backdrop-blur-sm"
-                                            : "hover:bg-white/10"
+                                        ? "bg-white/20 backdrop-blur-sm"
+                                        : "hover:bg-white/10"
                                         }`}
                                 >
                                     <Icon className="h-4 w-4" />
@@ -108,8 +114,8 @@ export default function DoctorNav() {
                                     key={item.href}
                                     href={item.href}
                                     className={`flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-all ${isActive
-                                            ? "bg-white/20 backdrop-blur-sm"
-                                            : "hover:bg-white/10"
+                                        ? "bg-white/20 backdrop-blur-sm"
+                                        : "hover:bg-white/10"
                                         }`}
                                 >
                                     <Icon className="h-5 w-5" />
