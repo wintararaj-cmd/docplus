@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
-import BookAppointmentForm from '@/components/patient/BookAppointmentForm'
+
 
 async function getDoctorDetails(doctorId: string) {
     const doctor = await prisma.doctor.findUnique({
@@ -242,8 +242,8 @@ export default async function DoctorProfilePage({ params }: { params: { id: stri
                                                             <Star
                                                                 key={i}
                                                                 className={`w-4 h-4 ${i < review.rating
-                                                                        ? 'fill-yellow-400 text-yellow-400'
-                                                                        : 'text-gray-300'
+                                                                    ? 'fill-yellow-400 text-yellow-400'
+                                                                    : 'text-gray-300'
                                                                     }`}
                                                             />
                                                         ))}
