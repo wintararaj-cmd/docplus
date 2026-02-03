@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
                 where: { id: updateDoctor.userId },
                 data: {
                     isActive: true,
-                    emailVerified: new Date(), // Auto-verify email upon admin approval
+                    emailVerified: true, // Auto-verify email upon admin approval
                 },
             });
 
