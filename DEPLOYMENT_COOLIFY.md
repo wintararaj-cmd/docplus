@@ -54,7 +54,8 @@ You will create **two applications** and **one database** in your Coolify projec
     *   **Port**: `3000`
     *   **Build Command**: `npm run db:generate && npm run build`
         *   *Note: We run db:generate to ensure Prisma Client is ready.*
-    *   **Start Command**: `npm run start`
+    *   **Start Command**: `npm run db:deploy && npm run start`
+        *   *Note: This runs migrations to create tables before starting the app.*
 6.  **Environment Variables**:
     *   `DATABASE_URL`: `[Paste your PostgreSQL Connection String]`
     *   `NEXTAUTH_URL`: `[This Service's Public URL]`
